@@ -13,14 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useCities } from '../hooks/use-cities';
 import type { CityModel } from '../models/city.model';
-
-export function convertToEmoji(countryCode: string) {
-  const codePoints = countryCode
-    .toUpperCase()
-    .split('')
-    .map((char) => 127397 + char.charCodeAt(0));
-  return String.fromCodePoint(...codePoints);
-}
+import { convertToEmoji } from '../util';
 
 function Form() {
   const navigate = useNavigate();

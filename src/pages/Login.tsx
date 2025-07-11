@@ -1,14 +1,29 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classes from './Login.module.css';
+import { useAuth } from '../hooks/use-auth';
+import { useNavigate } from 'react-router-dom';
+import Button from '../components/Button';
 
 export default function Login() {
-  // PRE-FILL FOR DEV PURPOSES
-  const [email, setEmail] = useState('jack@example.com');
-  const [password, setPassword] = useState('qwerty');
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login, isLoggedIn } = useAuth();
+
+  async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    await login(email, password);
+  }
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/app', { replace: true });
+    }
+  }, [isLoggedIn, navigate]);
 
   return (
     <main className={classes.login}>
-      <form className={classes.form}>
+      <form className={classes.form} onSubmit={handleLogin}>
         <div className={classes.row}>
           <label htmlFor="email">Email address</label>
           <input
@@ -30,7 +45,9 @@ export default function Login() {
         </div>
 
         <div>
-          <button>Login</button>
+          <Button onClick={() => {}} type="submit" classType="primary">
+            Login
+          </Button>
         </div>
       </form>
     </main>
