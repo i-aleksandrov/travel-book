@@ -47,6 +47,7 @@ export default function Map() {
         className={classes.map}
         center={mapPosition}
         zoom={8}
+        minZoom={4}
         scrollWheelZoom={true}
       >
         <TileLayer

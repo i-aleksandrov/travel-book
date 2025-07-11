@@ -2,11 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import Button from './Button';
-import styles from './Form.module.css';
+import classes from './Form.module.css';
 import { useNavigate } from 'react-router-dom';
 import BackButton from './BackButton';
 import { useUrlPosition } from '../hooks/use-url-position';
 import Message from './Message';
+import DatePicker from 'react-datepicker';
+import { v4 as uuidv4 } from 'uuid';
+
+import 'react-datepicker/dist/react-datepicker.css';
+import { useCities } from '../hooks/use-cities';
+import type { CityModel } from '../models/city.model';
 
 export function convertToEmoji(countryCode: string) {
   const codePoints = countryCode
@@ -18,6 +24,7 @@ export function convertToEmoji(countryCode: string) {
 
 function Form() {
   const navigate = useNavigate();
+  const { createCity, isLoading: isLoadingCitiesContext } = useCities();
 
   const [lat, lng] = useUrlPosition();
   const [cityName, setCityName] = useState('');
@@ -54,35 +61,69 @@ function Form() {
       }
     }
 
-    fetchCityData();
+    if (lat && lng) {
+      fetchCityData();
+    }
   }, [lat, lng]);
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!cityName || !date) {
+      return;
+    }
+
+    const newCity: CityModel = {
+      cityName,
+      country,
+      emoji,
+      date,
+      notes,
+      position: { lat: Number(lat), lng: Number(lng) },
+      id: uuidv4(),
+    };
+
+    createCity(newCity).then(() => {
+      navigate('../cities');
+    });
+  }
+
+  if (!lat && !lng) {
+    return <Message message="Start by clicking somewhere on the map" />;
+  }
 
   if (geocodingError) {
     return <Message message={geocodingError} />;
   }
 
   return (
-    <form className={styles.form}>
-      <div className={styles.row}>
+    <form
+      className={`${classes.form} ${
+        isLoadingCitiesContext ? classes.loading : ''
+      }`}
+      onSubmit={handleSubmit}
+    >
+      <div className={classes.row}>
         <label htmlFor="cityName">City name</label>
         <input
           id="cityName"
           onChange={(e) => setCityName(e.target.value)}
           value={cityName}
         />
-        <span className={styles.flag}>{emoji}</span>
+        <span className={classes.flag}>{emoji}</span>
       </div>
 
-      <div className={styles.row}>
+      <div className={classes.row}>
         <label htmlFor="date">When did you go to {cityName}?</label>
-        <input
+        <DatePicker
           id="date"
-          onChange={(e) => setDate(e.target.value)}
-          value={date}
+          selected={new Date(date)}
+          onChange={(e) => setDate(e!.toLocaleDateString())}
+          dateFormat="dd/MM/yyyy"
         />
       </div>
 
-      <div className={styles.row}>
+      <div className={classes.row}>
         <label htmlFor="notes">Notes about your trip to {cityName}</label>
         <textarea
           id="notes"
@@ -91,7 +132,7 @@ function Form() {
         />
       </div>
 
-      <div className={styles.buttons}>
+      <div className={classes.buttons}>
         <Button onClick={() => {}} classType="primary">
           Add
         </Button>

@@ -10,5 +10,5 @@ export interface CityModel {
   date: string;
   notes: string;
   position: Coordinates;
-  id: number;
+  id?: string;
 }
