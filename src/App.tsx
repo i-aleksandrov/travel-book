@@ -1,17 +1,18 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { CitiesProvider } from './context/CitiesContext';
-import Product from './pages/Product';
-import Pricing from './pages/Pricing';
-import Home from './pages/Home';
-import NotFound from './pages/NotFound';
-import AppLayout from './pages/AppLayout';
-import Login from './pages/Login';
 import CityList from './components/CityList';
 import CountryList from './components/CountryList';
 import City from './components/City';
 import Form from './components/Form';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './pages/ProtectedRoute';
+
+import Product from './pages/Product';
+import Pricing from './pages/Pricing';
+import Home from './pages/Home';
+import NotFound from './pages/NotFound';
+import AppLayout from './pages/AppLayout';
+import Login from './pages/Login';
 
 export default function App() {
   return (

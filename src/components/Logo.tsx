@@ -4,7 +4,11 @@ import classes from './Logo.module.css';
 function Logo() {
   return (
     <Link to="/">
-      <img src="/logo.png" alt="TravelBook logo" className={classes.logo} />
+      <img
+        src="/travel-book-logo.png"
+        alt="TravelBook logo"
+        className={classes.logo}
+      />
     </Link>
   );
 }

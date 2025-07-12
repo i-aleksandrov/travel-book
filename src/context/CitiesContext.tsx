@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createContext, useEffect, useReducer } from 'react';
+import { createContext, useCallback, useEffect, useReducer } from 'react';
 import type { CityModel } from '../models/city.model';
 import { app } from '../config';
 import {
@@ -130,7 +130,7 @@ function CitiesProvider({ children }: CitiesProviderProps) {
     fetchCities();
   }, []);
 
-  async function getCity(id: string) {
+  const getCity = useCallback(async function getCity(id: string) {
     dispatch({ type: CityActionTypes.loading });
     try {
       const userId = 'keq4NFXZOAaGda2FRpqLE7S73Pj2';
@@ -144,7 +144,7 @@ function CitiesProvider({ children }: CitiesProviderProps) {
       });
       console.log(error);
     }
-  }
+  }, []);
 
   async function createCity(city: CityModel) {
     dispatch({ type: CityActionTypes.loading });
